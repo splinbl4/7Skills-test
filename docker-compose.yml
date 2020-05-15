@@ -44,5 +44,13 @@ services:
     ports:
       - "33061:3306"
 
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
 volumes:
   mysql:

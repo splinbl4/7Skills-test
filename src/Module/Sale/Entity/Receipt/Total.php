@@ -16,7 +16,8 @@ class Total
 
     public function __construct(float $value)
     {
-        Assert::notEmpty($value);
+        Assert::notNull($value);
+        $this->value = $value;
     }
 
     /**

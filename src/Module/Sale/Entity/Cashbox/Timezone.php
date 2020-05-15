@@ -16,7 +16,8 @@ class Timezone
 
     public function __construct(int $value)
     {
-        Assert::notEmpty($value);
+        Assert::notNull($value);
+        $this->value = $value;
     }
 
     /**

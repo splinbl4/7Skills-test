@@ -8,10 +8,7 @@ RUN apk add --no-cache autoconf g++ make \
 RUN apk add --no-cache libmcrypt-dev mysql-client \
     && docker-php-ext-install pdo_mysql
 
-RUN apk add --no-cache openldap-dev \
-    && docker-php-ext-configure ldap \
-    && docker-php-ext-install ldap
-
+RUN docker-php-ext-install sockets
 
 RUN apk add --no-cache unzip
 

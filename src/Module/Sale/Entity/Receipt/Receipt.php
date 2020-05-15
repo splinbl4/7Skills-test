@@ -32,7 +32,7 @@ class Receipt
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Module\Sale\Entity\Cashbox\Cashbox")
-     * @ORM\JoinColumn(name="receipt_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="cashbox_id", referencedColumnName="id", nullable=false)
      */
     private Cashbox $cashbox;
 
@@ -45,6 +45,19 @@ class Receipt
      * @ORM\Column(type="sale_receipts_total")
      */
     private Total $total;
+
+    public function __construct(
+        Number $number,
+        Cashbox $cashbox,
+        DateTimeImmutable $date,
+        Total $total
+    ) {
+        $this->number = $number;
+        $this->cashbox = $cashbox;
+        $this->date = $date;
+        $this->total = $total;
+        $this->id = 1;
+    }
 
     /**
      * @return int

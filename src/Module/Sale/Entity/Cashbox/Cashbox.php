@@ -28,6 +28,11 @@ class Cashbox
      */
     private Timezone $timezone;
 
+    public function __construct(Timezone $timezone)
+    {
+        $this->timezone = $timezone;
+    }
+
     /**
      * @return int
      */
