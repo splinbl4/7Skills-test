@@ -32,6 +32,16 @@ services:
     volumes:
       - ./:/app
 
+  api-supervisor:
+    build:
+      context: docker
+      dockerfile: supervisor/Dockerfile
+    environment:
+      APP_ENV: dev
+      APP_DEBUG: 1
+    volumes:
+      - ./:/app
+
   mysql:
     image: mysql:5.7
     volumes:

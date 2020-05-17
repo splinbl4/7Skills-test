@@ -6,12 +6,9 @@ namespace App\Module\Sale\QueueBroker\Consumer;
 
 use App\Flusher;
 use App\Module\Sale\Command\Create\Command;
+use App\Module\Sale\Command\Create\Handler;
 use App\Module\Sale\Entity\Cashbox\Cashbox;
-use App\Module\Sale\Entity\Receipt\Number;
-use App\Module\Sale\Entity\Receipt\Receipt;
-use App\Module\Sale\Entity\Receipt\Total;
 use App\Module\Sale\Repository\CashboxRepository;
-use App\Module\Sale\Repository\ReceiptRepository;
 use App\Utils\ArrayTools;
 use ArrayIterator;
 use Exception;
@@ -28,9 +25,7 @@ class ReceiptGeneratorConsumer implements ConsumerInterface
 {
     use LoggerAwareTrait;
 
-    private const BATCH_SIZE = 100;
-
-    private ReceiptRepository $receiptRepository;
+    private const BATCH_SIZE = 50;
 
     private SerializerInterface $serializer;
 
@@ -38,16 +33,18 @@ class ReceiptGeneratorConsumer implements ConsumerInterface
 
     private CashboxRepository $cashboxRepository;
 
+    private Handler $handler;
+
     public function __construct(
-        ReceiptRepository $receiptRepository,
         CashboxRepository $cashboxRepository,
         SerializerInterface $serializer,
-        Flusher $flusher
+        Flusher $flusher,
+        Handler $handler
     ) {
-        $this->receiptRepository = $receiptRepository;
         $this->serializer = $serializer;
         $this->flusher = $flusher;
         $this->cashboxRepository = $cashboxRepository;
+        $this->handler = $handler;
     }
 
     /**
@@ -71,14 +68,7 @@ class ReceiptGeneratorConsumer implements ConsumerInterface
         try {
             foreach (ArrayTools::chunk($commandsIterator, self::BATCH_SIZE) as $commandChunk) {
                 foreach ($commandChunk as $command) {
-                    $receipt = new Receipt(
-                        new Number($command->number),
-                        $cashboxes[$command->cashboxId],
-                        $command->date,
-                        new Total($command->total)
-                    );
-
-                    $this->receiptRepository->add($receipt);
+                    $this->handler->handle($command, $cashboxes[$command->cashboxId]);
                 }
                 $this->flusher->flush();
             }

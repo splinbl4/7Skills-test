@@ -6,6 +6,7 @@ namespace App\Module\Sale\Entity\Cashbox;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use Webmozart\Assert\Assert;
 
 /**
  * Class Cashbox
@@ -28,9 +29,16 @@ class Cashbox
      */
     private Timezone $timezone;
 
-    public function __construct(Timezone $timezone)
+    /**
+     * @ORM\Column(type="string")
+     */
+    private string $title;
+
+    public function __construct(Timezone $timezone, string $title)
     {
         $this->timezone = $timezone;
+        Assert::notEmpty($title);
+        $this->title = $title;
     }
 
     /**
@@ -47,5 +55,13 @@ class Cashbox
     public function getTimezone(): Timezone
     {
         return $this->timezone;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
     }
 }

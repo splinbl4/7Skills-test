@@ -20,14 +20,13 @@ docker-build:
 api-clear:
 	docker run --rm -v ${PWD}/:/app -w /app alpine sh -c 'rm -rf var/cache/* var/log/*'
 
-api-init: api-composer-install api-wait-db api-migrations api-fixtures
+api-init: api-composer-install api-wait-db api-migrations api-fixtures api-receipt-generate
 
 api-composer-install:
 	docker-compose run --rm api-php-cli composer install
 
 api-wait-db:
 	sleep 10
-	#until docker-compose exec -T mysql mysqladmin ping ; do sleep 20 ; done
 
 api-migrations:
 	docker-compose run --rm api-php-cli php bin/console doctrine:migrations:migrate --no-interaction
@@ -37,3 +36,6 @@ api-validate-schema:
 
 api-fixtures:
 	docker-compose run --rm api-php-cli php bin/console doctrine:fixtures:load --no-interaction
+
+api-receipt-generate:
+	docker-compose run --rm api-php-cli php bin/console receipts:generate

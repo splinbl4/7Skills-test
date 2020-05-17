@@ -15,13 +15,13 @@ class CashboxFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-         $cashboxFirst = new Cashbox(new Timezone(-8));
+         $cashboxFirst = new Cashbox(new Timezone(-8), 'Касса 1');
          $manager->persist($cashboxFirst);
 
-         $cashboxSecond = new Cashbox(new Timezone(0));
+         $cashboxSecond = new Cashbox(new Timezone(0), 'Касса 2');
          $manager->persist($cashboxSecond);
 
-         $cashboxThird = new Cashbox(new Timezone(8));
+         $cashboxThird = new Cashbox(new Timezone(8), 'Касса 3');
          $manager->persist($cashboxThird);
 
         $manager->flush();
